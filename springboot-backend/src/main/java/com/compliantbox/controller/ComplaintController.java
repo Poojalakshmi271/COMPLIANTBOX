@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/api/complaints")
+@CrossOrigin(origins = "https://compliantbox-frontend.onrender.com")
 public class ComplaintController {
 
     private final ComplaintRepository complaintRepository;
