@@ -34,8 +34,10 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // Public routes — same as Express routes without protect middleware
+                // Public routes
                 .requestMatchers("/api/auth/register", "/api/auth/login", "/").permitAll()
+                // Allow preflight (OPTIONS) requests for CORS
+                .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                 // Everything else requires authentication
                 .anyRequest().authenticated()
             )
