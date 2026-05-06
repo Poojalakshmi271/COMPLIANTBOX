@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: compliantbox-backend
+    runtime: java
+    rootDir: springboot-backend
+    buildCommand: mvn clean package -DskipTests
+    startCommand: java -jar target/compliantbox-backend-1.0.0.jar
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        sync: false
