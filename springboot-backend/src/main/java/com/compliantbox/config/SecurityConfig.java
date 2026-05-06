@@ -34,33 +34,21 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // Public routes
-                .requestMatchers("/api/auth/register", "/api/auth/login", "/").permitAll()
-                // Allow preflight (OPTIONS) requests for CORS
-                .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
-                // Everything else requires authentication
-                .anyRequest().authenticated()
-            )
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .anyRequest().permitAll() // Permit EVERYTHING for now to test
+            );
 
         return http.build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // BCrypt is compatible with bcryptjs used in Node.js
         return new BCryptPasswordEncoder(10);
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        // Allow the Vite React frontend
-        config.setAllowedOrigins(List.of(
-            "http://localhost:5173", 
-            "http://localhost:3000",
-            "https://compliantbox-frontend.onrender.com"
-        ));
+        config.setAllowedOriginPatterns(List.of("*")); // Allow ALL origins
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
