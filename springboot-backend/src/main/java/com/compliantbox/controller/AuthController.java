@@ -21,7 +21,14 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = "https://compliantbox-frontend.onrender.com")
 public class AuthController {
+
+    // Test endpoint to check if API is alive
+    @GetMapping("/")
+    public String health() {
+        return "CompliantBox API is running!";
+    }
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
