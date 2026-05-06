@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
       const { data } = await axios.post(`${API_URL}/api/auth/login`, { email, password });
       setUser(data);
       localStorage.setItem('user', JSON.stringify(data));
-      return { success: true };
+      return { success: true, role: data.role };
     } catch (error) {
       return { success: false, message: error.response?.data?.message || 'Login failed' };
     }

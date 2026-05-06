@@ -19,7 +19,12 @@ const Login = () => {
     
     const res = await login(email, password);
     if (res.success) {
-      navigate('/dashboard');
+      // Admins go to admin portal, employees to their dashboard
+      if (res.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
     } else {
       setError(res.message);
     }

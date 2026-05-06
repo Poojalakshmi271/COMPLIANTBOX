@@ -7,13 +7,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
- * AdminSeeder — equivalent to the Node.js seedAdmin.js script.
- * Runs automatically on startup. Creates a default admin account
- * if one does not already exist.
- *
- * Default credentials:
- *   Email:    admin@company.com
- *   Password: admin123
+ * AdminSeeder — creates default admin accounts on startup.
+ * Seeds two admins:
+ *   1. admin@company.com / admin123
+ *   2. dp27@gmail.com    / admin123
+ * If accounts already exist, their role is always forced to admin
+ * so they cannot be accidentally downgraded.
  */
 @Component
 public class AdminSeeder implements CommandLineRunner {
@@ -28,18 +27,31 @@ public class AdminSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        String adminEmail = "admin@company.com";
+        seedAdmin("Admin",       "admin@company.com", "admin123");
+        seedAdmin("Admin User",  "dp27@gmail.com",    "admin123");
+    }
 
-        if (!userRepository.existsByEmail(adminEmail)) {
-            User admin = new User();
-            admin.setName("Admin");
-            admin.setEmail(adminEmail);
-            admin.setPassword(passwordEncoder.encode("admin123"));
-            admin.setRole(User.Role.admin);
-            userRepository.save(admin);
-            System.out.println("✅ Default admin seeded: " + adminEmail + " / admin123");
-        } else {
-            System.out.println("ℹ️  Admin already exists, skipping seed.");
-        }
+    private void seedAdmin(String name, String email, String rawPassword) {
+        userRepository.findByEmail(email).ifPresentOrElse(
+            existing -> {
+                // Force role to admin in case it was downgraded
+                if (existing.getRole() != User.Role.admin) {
+                    existing.setRole(User.Role.admin);
+                    userRepository.save(existing);
+                    System.out.println("✅ Admin role fixed for: " + email);
+                } else {
+                    System.out.println("ℹ️  Admin already exists: " + email);
+                }
+            },
+            () -> {
+                User admin = new User();
+                admin.setName(name);
+                admin.setEmail(email);
+                admin.setPassword(passwordEncoder.encode(rawPassword));
+                admin.setRole(User.Role.admin);
+                userRepository.save(admin);
+                System.out.println("✅ Admin seeded: " + email + " / " + rawPassword);
+            }
+        );
     }
 }

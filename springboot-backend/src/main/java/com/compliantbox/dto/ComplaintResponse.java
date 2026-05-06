@@ -1,6 +1,7 @@
 package com.compliantbox.dto;
 
 import com.compliantbox.model.Complaint;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ public class ComplaintResponse {
     private String category;
     private String priority;
     private String status;
+    @JsonProperty("isAnonymous")
     private boolean isAnonymous;
     private UserSummary user;   // null if anonymous
     private String adminResponse;

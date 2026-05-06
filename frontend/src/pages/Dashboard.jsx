@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { Clock, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Redirect admins to admin portal
+  useEffect(() => {
+    if (user && user.role === 'admin') {
+      navigate('/admin', { replace: true });
+    }
+  }, [user, navigate]);
 
   const fetchComplaints = async () => {
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
