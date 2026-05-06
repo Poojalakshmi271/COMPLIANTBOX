@@ -13,8 +13,9 @@ const AdminDashboard = () => {
   const [replyInput, setReplyInput] = useState({});
 
   const fetchComplaints = async () => {
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
     try {
-      const { data } = await axios.get(`http://localhost:5000/api/complaints`, {
+      const { data } = await axios.get(`${API_URL}/api/complaints`, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       setComplaints(data);
@@ -30,8 +31,9 @@ const AdminDashboard = () => {
   }, [user]);
 
   const updateComplaint = async (id, payload) => {
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
     try {
-      await axios.put(`http://localhost:5000/api/complaints/${id}`, payload, {
+      await axios.put(`${API_URL}/api/complaints/${id}`, payload, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       fetchComplaints();

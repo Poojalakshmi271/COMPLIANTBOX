@@ -20,8 +20,9 @@ const SubmitComplaint = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
     try {
-      await axios.post('http://localhost:5000/api/complaints', formData, {
+      await axios.post(`${API_URL}/api/complaints`, formData, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       navigate('/dashboard');

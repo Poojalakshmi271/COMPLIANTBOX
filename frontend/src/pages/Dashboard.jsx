@@ -9,8 +9,9 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
 
   const fetchComplaints = async () => {
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
     try {
-      const { data } = await axios.get(`http://localhost:5000/api/complaints/my`, {
+      const { data } = await axios.get(`${API_URL}/api/complaints/my`, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       setComplaints(data);
